@@ -1,0 +1,16 @@
+﻿const fs = require('fs');
+const p = require('../package.json');
+p.main = 'electron/main.js';
+p.scripts = p.scripts || {};
+p.scripts['electron:dev'] = 'concurrently "pnpm run dev" "wait-on http://localhost:3000 && electron ."';
+p.scripts['build:web'] = 'next build';
+p.scripts['start:web'] = 'next start';
+p.scripts['dist'] = 'pnpm run build:web && electron-builder --win --x64';
+p.build = p.build || {};
+p.build.appId = 'com.chappdev.noteapp';
+p.build.directories = p.build.directories || {};
+p.build.directories.output = 'dist';
+p.build.files = ['**/*'];
+p.build.win = { target: ['nsis'] };
+fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+console.log('package.json updated (v2)');
